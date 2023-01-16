@@ -9,22 +9,6 @@ const app = express();
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static("public"));
 
-//mailchimp
-/* client.setConfig({
-  apiKey: "1629a413d4909855b4b093edd068a69f-us12",
-  server: "https://us12.admin.mailchimp.com/account/api/",
-});
-
-const run = async () => {
-  const response = await client.lists.batchListMembers("list_id", {
-    members: [{}],
-  });
-  console.log(response);
-};
-
-run(); */
-//end mailchimp
-
 app.get("/", function (req, res) {
     res.sendFile(__dirname + "/signup.html");
 });
@@ -60,56 +44,16 @@ app.post("/", function (req, res) {
 
     app.post("/failure", function(req, res){
         res.redirect("/");
-    })
+    });
+
+    app.post("/exists", function(req, res){
+        res.redirect("/");
+    });
 
     client.setConfig({
         apiKey: myApiKey,
         server: mailchimpServerPrefix,
     });
-    // console.log(client);
-
-    /* const request = https.request(client, options, function (response) {
-        response.on("data", function(data){
-            console.log(JSON.parse(data));
-        })
-    });
-
-    request.write(jsonData);
-    request.end(); */
-
-    //checking ping
-    /* async function run() {
-        const response = await client.ping.get();
-        console.log(response);
-      } */
-
-    //for lists
-    /* const run = async () => {
-        try {
-            const response = await client.lists.batchListMembers(myAudienceId, {
-                members: [
-                    {
-                        email_address: email,
-                        email_type: "text",
-                        status: "subscribed",
-                        merge_fields: {
-                            FNAME: firstName,
-                            LNAME: lastName,
-                        },
-                    },
-                ],
-            });
-    
-            console.log(response.errors);
-    
-            // const errorCount = Number(response.error_count);
-            // console.log(errorCount);
-            res.sendFile(__dirname + "/success.html");
-        } catch (err) {
-            console.log(err.status);
-            res.sendFile(__dirname + "/failure.html")
-        }
-    } */
 
     const run = async () => {
         const response = await client.lists.batchListMembers(myAudienceId, {
@@ -128,12 +72,13 @@ app.post("/", function (req, res) {
 
         if (response.error_count == 0) {
             res.sendFile(__dirname + "/success.html");
+        } else if (response.errors.error_code == 'ERROR_CONTACT_EXISTS') {
+            console.log(response.errors);
+            res.sendFile(__dirname + "/exists.html");
         } else {
             console.log(response.errors);
             res.sendFile(__dirname + "/failure.html");
-        }
-        // const errorCount = Number(response.error_count);
-        // console.log(errorCount);        
+        } 
     }
     run();
 });
