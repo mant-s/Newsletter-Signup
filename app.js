@@ -72,17 +72,17 @@ app.post("/", function (req, res) {
 
         if (response.error_count == 0) {
             res.sendFile(__dirname + "/success.html");
-        } else if (response.errors.error_code == 'ERROR_CONTACT_EXISTS') {
-            console.log(response.errors);
+        } else if (response.errors[0].error_code == 'ERROR_CONTACT_EXISTS') {
+            console.log(response.errors[0]);
             res.sendFile(__dirname + "/exists.html");
         } else {
-            console.log(response.errors);
+            console.log(response.errors[0]);
             res.sendFile(__dirname + "/failure.html");
         } 
     }
     run();
 });
 
-app.listen(process.env.PORT, function () {
-    console.log("server is running on port 3000");
+app.listen(process.env.PORT || 3000, function () {
+    console.log("server is running");
 });
