@@ -3,6 +3,7 @@ const bodyParser = require("body-parser");
 const https = require("https");
 const client = require("@mailchimp/mailchimp_marketing"); //mailchimp
 const e = require("express");
+const {userConfigs} = require(__dirname + "/user-config.js");
 
 const app = express();
 
@@ -33,12 +34,9 @@ app.post("/", function (req, res) {
     };
 
     const jsonData = JSON.stringify(data);
-    const mailchimpServerPrefix = "us12";
-    const myApiKey = "1629a413d4909855b4b093edd068a69f-us12";
-    const myAudienceId = "a911a10f9e";
     const options = {
         method: "post",
-        auth: "marcus1:" + myApiKey,
+        auth: "marcus1:" + userConfigs.myApiKey,
 
     };
 
@@ -51,12 +49,12 @@ app.post("/", function (req, res) {
     });
 
     client.setConfig({
-        apiKey: myApiKey,
-        server: mailchimpServerPrefix,
+        apiKey: userConfigs.myApiKey,
+        server: userConfigs.mailchimpServerPrefix,
     });
 
     const run = async () => {
-        const response = await client.lists.batchListMembers(myAudienceId, {
+        const response = await client.lists.batchListMembers(userConfigs.myAudienceId, {
             members: [
                 {
                     email_address: email,
