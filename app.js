@@ -7,6 +7,10 @@ const {userConfigs} = require(__dirname + "/.user-config.js");
 
 const app = express();
 
+var myApiKey = process.env.MY_API_KEY;
+var mailchimpServerPrefix = process.env.MAILCHIMP_SERVER_PREFIX;
+var myAudienceId = process.env.MY_AUDIENCE_ID;
+
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static("public"));
 
@@ -36,7 +40,7 @@ app.post("/", function (req, res) {
     const jsonData = JSON.stringify(data);
     const options = {
         method: "post",
-        auth: "marcus1:" + userConfigs.myApiKey,
+        auth: "marcus1:" + myApiKey,
 
     };
 
@@ -49,12 +53,12 @@ app.post("/", function (req, res) {
     });
 
     client.setConfig({
-        apiKey: userConfigs.myApiKey,
-        server: userConfigs.mailchimpServerPrefix,
+        apiKey: myApiKey,
+        server: mailchimpServerPrefix,
     });
 
     const run = async () => {
-        const response = await client.lists.batchListMembers(userConfigs.myAudienceId, {
+        const response = await client.lists.batchListMembers(myAudienceId, {
             members: [
                 {
                     email_address: email,
