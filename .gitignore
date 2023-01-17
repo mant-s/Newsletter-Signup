@@ -1,2 +1,3 @@
 #files to be ignored
 .user-config.js
+secrets.sh
