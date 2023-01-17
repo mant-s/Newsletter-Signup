@@ -1,1 +1,2 @@
-user-configs.js
+#files to be ignored
+.user-config.js
