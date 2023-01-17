@@ -3,7 +3,7 @@ const bodyParser = require("body-parser");
 const https = require("https");
 const client = require("@mailchimp/mailchimp_marketing"); //mailchimp
 const e = require("express");
-const {userConfigs} = require(__dirname + "/user-config.js");
+const {userConfigs} = require(__dirname + "/.user-config.js");
 
 const app = express();
 
